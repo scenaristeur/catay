@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
-export class CataiConnector {
-    constructor({ name = "inconnu" }) {
-      this.name = name;
-      this.id = uuidv4()
+import { Base } from "../base/index.js";
+export class CataiConnector extends Base {
+    constructor(options={}) {
+      super (options)
+      this.flag = "[CATAI]"
 
       this._init()
     }
@@ -11,6 +12,6 @@ export class CataiConnector {
 
 
       
-      console.log("test if catai is ok")
+      this.log("test if catai is ok")
     }
 }

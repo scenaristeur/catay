@@ -1,7 +1,14 @@
 import { Worker } from "./src/worker/index.js";
 
+console.log("\n###llm crowd server###\n"+ new Date())
+
+
 let worker = new Worker({
     name: "Bob le worker",
+    catai_url: "ws://localhost:3000",
+    yjs_url : "ws://localhost:1234",
+    yjs_room : "my-roomname",
+    debug: true
 })
 
 
