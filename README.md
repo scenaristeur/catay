@@ -1,4 +1,6 @@
 # yjs server
+- en dehors d'un projet node
+PORT=1234 npx y-websocket
 
 ```
 (node:4211) Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.

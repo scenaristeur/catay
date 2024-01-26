@@ -1,7 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import UserView from './components/UserView.vue';
+import UserView from './views/UserView.vue';
+import SendView from './views/SendView.vue'
+import AwarenessView from './views/AwarenessView.vue'
 </script>
 
 <template>
@@ -10,7 +12,9 @@ import UserView from './components/UserView.vue';
 
     <div class="wrapper">
       <UserView/>
+      <SendView />  
       <HelloWorld msg="You did it!" />
+      <AwarenessView/>
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
