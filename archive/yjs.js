@@ -68,7 +68,7 @@ wsProvider.on("status", (event) => {
   });
   
   catai._ws.on("close", async () => {
-    console.log("CATAI c;ose")
+    console.log("CATAI close")
     worker.open = false;
     updateWorker();
   });

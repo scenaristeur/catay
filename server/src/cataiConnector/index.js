@@ -11,11 +11,30 @@ export class CataiConnector extends Base {
   }
   async _init() {
     this.catai = new RemoteCatAI(this.options.catai_url);
-    await this.test();
+    this.catai.on("open", async () => {
+      this.log("Connected");
+      if(this.options.debug){
+        await this.test();
+      }
+  
+    });
+
+    this.catai.on("close", async () => {
+      this.log("CATAI close")
+      this.state="ws closed"
+      this.log("state", this.state);
+    });
+
+    this.catai.on('error', async (err) => {
+      this.log("CATAI error", err)
+      this.state="ws error"
+      this.log("state", this.state);
+     })
+
   }
   async test() {
     this.log("test if catai is ok");
-    this.catai.on("open", async () => {
+
       this.log("Connected, sending 'Are you ready?' to catai...");
       const response = await this.catai.prompt(
         "Hello Catai, are you ready ?",
@@ -30,6 +49,6 @@ export class CataiConnector extends Base {
           ? "ready"
           : "no response, did you launch catai ? see https://github.com/withcatai/catai";
       this.log("state", this.state);
-    });
+
   }
 }

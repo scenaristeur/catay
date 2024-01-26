@@ -14,12 +14,24 @@ this.options = options
       this._init()
     }
     _init(){
-      this.yjs = new YjsConnector(this.options);
-      this.catai = new CataiConnector(this.options)
+      this.log("Salut, je suis", this.name)
+      if (this.options.yjs_url && this.options.yjs_room){
+        this.log("connecting to YJS", this.yjs_url, this.yjs_room)
+        this.yjs = new YjsConnector(this.options);
+      }else{
+        this.log("!!! yjs_url NOT SET ! see https://github.com/scenaristeur/catay/blob/main/server/index.js")
+      }
+      if (this.options.catai_url){
+        this.log("connecting to CATAI", this.catai_url)
+        this.catai = new CataiConnector(this.options)
+      }else{
+        this.log("!!! catai_url NOT SET ! see https://github.com/scenaristeur/catay/blob/main/server/index.js")
+      }
+    
 
 
 
         
-      this.log("test if worker is ok", this.name)
+  
     }
 }
