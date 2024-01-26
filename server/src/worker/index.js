@@ -11,6 +11,7 @@ export class Worker extends Base {
     this.flag = "[WORKER][" + this.id + "]";
     this.chalk = this.options.color || this.chalk.blue;
     this.name = options.name || "inconnu";
+    this.numberOfKOMax = 12
     // this.catai_url = options.catai_url || "ws://localhost:3000";
     // this.yjs_url = options.yjs_url || "ws://localhost:1234";
     // this.yjs_room = options.yjs_room || "my-roomname";
@@ -34,5 +35,35 @@ export class Worker extends Base {
         "!!! catai_url NOT SET ! see https://github.com/scenaristeur/catay/blob/main/server/index.js"
       );
     }
+
+    this.healthCheckRunner= setInterval(this.healthCheck.bind(this), this.options.healthCheckInterval|| 5000);
   }
+
+  healthCheck() {
+if (this.catai && this.catai.state == 'ready' && this.yjs && this.yjs.state =='connected'){
+  this.state = "ok"
+  this.log("state", this.state)
+  this.numberOfKOMax = 12
+}else{
+  this.numberOfKOMax--
+  this.state = "ko "+this.numberOfKOMax
+  this.log("state", this.state)
+  if (this.numberOfKOMax <0){
+    this.log("worker KO", this.flag)
+    clearInterval( this.healthCheckRunner);
+  }
+
+}
+
+
+
+    this.log(
+      "health check",
+      "with CATAI state : '",
+      this.catai && this.catai.state,
+      "' and YJS state : '",
+      this.yjs && this.yjs.state,
+      "'."
+    );
+    }
 }
