@@ -14,6 +14,8 @@ wsProvider.on('status', event => {
 
 // const workspace = doc.getMap("workspace");
 const todos = doc.getMap("todos");
+const doing = doc.getMap("doing");
+const done = doc.getMap("done");
 
 
 export class User {
@@ -45,6 +47,12 @@ export class User {
 
       })
       console.log("#####", agents.length);
+      console.log(
+        "#####todos doing done#####",
+        Array.from(todos.keys()).length,
+        Array.from(doing.keys()).length,
+        Array.from(done.keys()).length
+      );
     });
 
     wsProvider.on("status", (event) => {
@@ -74,5 +82,25 @@ export class User {
 
 
     this.awareness.setLocalStateField("agent", ui_client);
+  }
+
+  addTodo(options){
+    let id = uuidv4();
+    let todo = {
+      id: id,
+      type: "text",
+      prompt: options.prompt || "prompt",
+      state: "todo",
+      temperature: options.temperature ||0,
+      date: Date.now(),
+    };
+    console.log(todo)
+    todos.set(id, todo);
+    console.log(
+      "#####todos doing done#####",
+      Array.from(todos.keys()).length,
+      Array.from(doing.keys()).length,
+      Array.from(done.keys()).length
+    );
   }
 }

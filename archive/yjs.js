@@ -60,12 +60,15 @@ wsProvider.on("status", (event) => {
 });
 
  catai.on('connection', async () => {
+  console.log("CATAI connection")
   catai._ws.on("open", async () => {
+    console.log("CATAI open")
     worker.open = true;
     updateWorker();
   });
   
   catai._ws.on("close", async () => {
+    console.log("CATAI c;ose")
     worker.open = false;
     updateWorker();
   });

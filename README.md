@@ -1,3 +1,7 @@
+catay/server$ nodemon
+
+
+
 # yjs server
 - en dehors d'un projet node
 PORT=1234 npx y-websocket

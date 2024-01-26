@@ -16,7 +16,7 @@ export default {
     methods: {
         send() {
             console.log(this.prompt)
-            this.user.ask(this.prompt.trim())
+            this.user.addTodo({prompt:this.prompt.trim(), temperature: 0})
             this.prompt = ""
         }
     },
