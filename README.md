@@ -37,6 +37,7 @@ running at 'localhost' on port 1234
 
 ```
 
+
 # catai server
 ```
 /dev/catai/server$ npm run cli serve
