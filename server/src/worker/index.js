@@ -6,6 +6,7 @@ export class Worker extends Base {
 super(options)
 this.options = options
       this.flag = "[WORKER]"
+      this.chalk = this.chalk.blue
       this.name = options.name || "inconnu";
       this.catai_url = options.catai_url || "ws://localhost:3000";
       this.yjs_url = options.yjs_url || "ws://localhost:1234";
@@ -13,8 +14,9 @@ this.options = options
       this._init()
     }
     _init(){
-      this.catai = new CataiConnector(this.options)
       this.yjs = new YjsConnector(this.options);
+      this.catai = new CataiConnector(this.options)
+
 
 
         

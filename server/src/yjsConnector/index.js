@@ -3,11 +3,12 @@ import { Base } from "../base/index.js";
 export class YjsConnector extends Base{
     constructor(options = {}) {
   super(options)
-      this.flag = "[CATAI]"
+      this.flag = "[YJS]"
+      this.chalk = this.chalk.magenta
       this._init()
     }
     _init(){
-      this.log("connecting catai")
+      this.log("connecting yjs")
 
         
       
