@@ -1,0 +1,24 @@
+<html>
+
+<body>
+    <h1 id="nom"> </h1>
+    <button id="connect_btn" onclick="connect()">Connect</button>
+</body>
+<script type="module">
+    import { User } from './user.js';
+    let user = new User({ name: "Bob le worker" })
+    user.log()
+    const updateUi = () => {
+        document.getElementById("nom").innerHTML = user.name
+    }
+    updateUi()
+</script>
+<script>
+    async function connect() {
+        console.log("connect")
+        await user.connect()
+        console.log(user.status)
+    }
+</script>
+
+</html>

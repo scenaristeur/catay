@@ -7,8 +7,14 @@ import { v4 as uuidv4 } from "uuid";
 import { RemoteCatAI } from "catai";
 
 import inquirer from "inquirer";
+let catai 
 
-const catai = await new RemoteCatAI("ws://localhost:3000");
+try{
+  catai = await new RemoteCatAI("ws://localhost:3000")
+  console.log("CATAI ok sur :3000", catai)
+}catch(e){
+console.log("CATAI non dispo")
+}
 
 console.log(process.argv);
 let processTime = 5000;
@@ -53,23 +59,32 @@ wsProvider.on("status", (event) => {
   updateWorker();
 });
 
-catai._ws.on("open", async () => {
-  worker.open = true;
-  updateWorker();
-});
+ catai.on('connection', async () => {
+  catai._ws.on("open", async () => {
+    worker.open = true;
+    updateWorker();
+  });
+  
+  catai._ws.on("close", async () => {
+    worker.open = false;
+    updateWorker();
+  });
+ })
 
-catai._ws.on("close", async () => {
-  worker.open = false;
-  updateWorker();
-});
+ catai.on('error', async (err) => {
+  console.log("CATAI error", err)
+ })
+
+
+
 
 function updateWorker() {
   // workspace.set(worker.id, worker);
-  awareness.setLocalStateField("worker", {
+  awareness.setLocalStateField("agent", {
     // Define a print name that should be displayed
     name: nom,
     //age: age,
-    worker_id: worker.id,
+    id: worker.id,
     open: worker.open,
     state: worker.state,
     style: "catai",
@@ -88,11 +103,17 @@ function updateWorker() {
 awareness.on("change", (changes) => {
   // Whenever somebody updates their awareness information,
   // we log all awareness information from all users.
-  console.log(
-    "######AWARENESS",
-    Array.from(awareness.getStates().values()),
-    "#####"
-  );
+  let agents = Array.from(awareness.getStates().values())
+  console.log("######AWARENESS", agents.length)
+  agents.forEach(a => {
+    try {
+      console.log(a.agent.type, a.agent.state, a.agent.name, a.agent.id, a.agent.style, a)
+    } catch (e) {
+      console.log(e, a)
+    }
+
+  })
+  console.log("#####", agents.length);
 });
 
 // You can think of your own awareness information as a key-value store.

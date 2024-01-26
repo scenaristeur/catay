@@ -1,5 +1,17 @@
 # yjs server
 
+```
+(node:4211) Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+/home/stag/dev/catay/node_modules/y-websocket/src/y-websocket.js:7
+import * as Y from 'yjs' // eslint-disable-line
+^^^^^^
+
+SyntaxError: Cannot use import statement outside a module
+
+```
+dans node_modules/y-websocket/
+
 fix https://github.com/yjs/y-websocket/issues/170
 bug on --websocket 
   "type":"module",
@@ -8,6 +20,8 @@ bug on --websocket
 run outside a project with type:module as y-websocket server is commonjs
 ```
 PORT=1234 YPERSISTENCE=./dbDir npx y-websocket
+
+PORT=1234 npx y-websocket
 
 :~/catai/models$ PORT=1234 npx y-websocket-server
 Need to install the following packages:
@@ -39,3 +53,5 @@ node yjs.js --name Adrienne --temperature 0.7 --age 30 --prompt "Quelle est la c
 
 # browser client
 
+# what is y-dat ?
+https://github.com/yjs/y-dat
