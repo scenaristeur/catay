@@ -12,7 +12,7 @@ export class CataiConnector extends Base {
   async _init() {
     this.catai = new RemoteCatAI(this.options.catai_url);
     this.catai.on("open", async () => {
-      this.log("Connected");
+      this.log("Connected to ", this.options.catai_url)
       if(this.options.debug){
         await this.test();
       }

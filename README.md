@@ -1,4 +1,7 @@
-catay/server$ nodemon
+cd catay/server/
+
+nodemon .  --name "Bob le Scribe" --temperature 3 --age 45 --prompt "raconte-moi une blague"
+
 
 
 
