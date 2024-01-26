@@ -4,6 +4,7 @@ import HelloWorld from './components/HelloWorld.vue'
 import UserView from './views/UserView.vue';
 import SendView from './views/SendView.vue'
 import AwarenessView from './views/AwarenessView.vue'
+import AdminView from './views/AdminView.vue'
 </script>
 
 <template>
@@ -14,8 +15,8 @@ import AwarenessView from './views/AwarenessView.vue'
       <UserView/>
       <SendView />  
       <HelloWorld msg="You did it!" />
+      <AdminView />
       <AwarenessView/>
-
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>

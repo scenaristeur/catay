@@ -3,7 +3,7 @@ cd catay/server/
 nodemon .  --name "Bob le Scribe" --temperature 3 --age 45 --prompt "raconte-moi une blague"
 
 
-
+this.options.healthCheckInterval = 5000 au lancement puis 60000 (5 secondes, puis toutes les minutes)
 
 # yjs server
 - en dehors d'un projet node

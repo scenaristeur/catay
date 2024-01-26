@@ -88,6 +88,7 @@ export class User {
     let id = uuidv4();
     let todo = {
       id: id,
+      asker : this.id,
       type: "text",
       prompt: options.prompt || "prompt",
       state: "todo",
@@ -103,4 +104,27 @@ export class User {
       Array.from(done.keys()).length
     );
   }
+  clean(){
+    this.cleanTodos();
+    this.cleanDoing();
+    this.cleanDone();
+  }
+  cleanTodos() {
+    for (const key of todos.keys()) {
+      todos.delete(key);
+    }
+  }
+  
+   cleanDoing() {
+    for (const key of doing.keys()) {
+      doing.delete(key);
+    }
+  }
+  
+   cleanDone() {
+    for (const key of done.keys()) {
+      done.delete(key);
+    }
+          }
+      
 }
