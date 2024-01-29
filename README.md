@@ -65,3 +65,6 @@ node yjs.js --name Adrienne --temperature 0.7 --age 30 --prompt "Quelle est la c
 
 # what is y-dat ?
 https://github.com/yjs/y-dat
+
+# monitoring
+- s-tui

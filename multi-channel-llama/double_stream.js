@@ -105,7 +105,7 @@ let denise_prompt = {
 }
 
 
-prompts.push(alice_prompt)
+//prompts.push(alice_prompt)
 prompts.push(bob_prompt)
 prompts.push(carlo_prompt)
 prompts.push(denise_prompt)
