@@ -1,0 +1,12 @@
+{
+  "name": "multi-channel-llama",
+  "version": "1.0.0",
+  "description": "multi channel node-llama-cpp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
