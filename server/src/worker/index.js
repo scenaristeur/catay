@@ -171,19 +171,21 @@ export class Worker extends Base {
 
   async process_doing_mc(id) {
     let current = this.doing.get(id);
-    let result = ""
+    this.log("process_doing_mc", id, current, this.mcConnector.state);
+    current.response = ""
     const response = await this.mcConnector.chat(
       current,
       (token) => {
         process.stdout.write(token);
-        result += token;
+        current.response += token;
+        this.doing.set(current.id, current);
       }
     );
 
-    this.log(`\nTotal text length: ${result.length}`);
+    this.log(`\nTotal text length: ${current.response.length}`);
 
     current.end = Date.now();
-    current.result = result;
+
     current.state = "done";
     current.duration = current.end - current.start;
     console.log("done", current);
