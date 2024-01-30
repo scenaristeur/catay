@@ -14,7 +14,7 @@ let worker = new Worker({
     "you are a pirate and you end all your sentences with 'Héhéhé, moussaillon!'",
   //catai_url: argv.catai_url || "ws://localhost:3000",
   multi_channel: true,
-  yjs_url: argv.yjs_url || "ws://localhost:1234", // "wss://ylm-websocket.glitch.me"
+  yjs_url: argv.yjs_url ||  "ws://localhost:1234", // "wss://ylm-websocket.glitch.me"
   yjs_room: argv.yjs_room || "my-roomname",
   debug: argv.debug || true, // change to false by default
   healthCheckInterval: argv.healthCheckInterval || 5000,
