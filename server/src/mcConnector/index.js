@@ -8,7 +8,7 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const modelName = "vicuna-7b-v1.5-16k.Q2_K.gguf"
+const modelName = "vicuna-7b-16k-q4_k_s.gguf"
 
 const model = new LlamaModel({
   modelPath: path.join(__dirname, "models", modelName)
