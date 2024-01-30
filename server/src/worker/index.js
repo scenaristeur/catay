@@ -4,6 +4,7 @@ import { CataiConnector } from "../cataiConnector/index.js";
 import { YjsConnector } from "../yjsConnector/index.js";
 import { McConnector } from "../mcConnector/index.js";
 import { TodoList } from "../todolist/index.js";
+import { createAbsolutePositionFromRelativePosition } from "yjs";
 
 export class Worker extends Base {
   constructor(options = {}) {
@@ -171,19 +172,20 @@ export class Worker extends Base {
 
   async process_doing_mc(id) {
     let current = this.doing.get(id);
-    let result = ""
+    current.response = ""
     const response = await this.mcConnector.chat(
       current,
       (token) => {
         process.stdout.write(token);
-        result += token;
+        current.response += token;
+        this.doing.set(current.id, current);
       }
     );
 
-    this.log(`\nTotal text length: ${result.length}`);
+    this.log(`\nTotal text length: ${current.response.length}`);
 
     current.end = Date.now();
-    current.result = result;
+    current.response = response;
     current.state = "done";
     current.duration = current.end - current.start;
     console.log("done", current);
