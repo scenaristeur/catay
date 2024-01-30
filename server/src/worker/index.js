@@ -159,9 +159,9 @@ export class Worker extends Base {
       //si plus de 6 minutes
       if (duration > 360000) {
         // TODO : ADD or asker not in awareness anymore
-        (item.state = "reverting to todos because obsolete "), duration;
+        item.state = "todo"
         this.doing.delete(item.id);
-        item.id = "todo";
+        //item.id = "todo";
         this.todos.set(item.id, item);
         this.log("revert doing", item.id, duration);
       }

@@ -14,7 +14,7 @@ export class Base {
       const hour = date.getHours();
       const min = date.getMinutes();
       const sec = date.getSeconds();
-      console.log("[" + hour + ":" + min + ":" + sec+"]", this.chalk(this.flag, ...args));
+      console.log("[" + hour + ":" + min + ":" + sec+"]\t", this.chalk(this.flag, ...args));
     }
   }
 }

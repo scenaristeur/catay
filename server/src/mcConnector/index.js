@@ -115,8 +115,8 @@ export class McConnector extends Base {
 
   chat = async (options, cb) => {
     const that = this
-    cb("### " + options.user + " say " + options.prompt)
-    cb("### starting session n°" + options.id)
+    this.log("### " + options.user + " say " + options.prompt)
+    this.log("### starting session n°" + options.id)
     const context = new LlamaContext({ model });
 
     let sessionOptions = {
@@ -141,14 +141,14 @@ export class McConnector extends Base {
 
     sessions[options.id] = s
 
-    console.log("### sessions actives ", sessions)
+    this.log("### sessions actives ", sessions)
 
     const chat = await session.prompt(options.prompt, {
       // Temperature et autres prompt options https://withcatai.github.io/node-llama-cpp/guide/chat-session#custom-temperature
       temperature: options.temperature || 0.7,
       onToken(chunk) {
         const tok = context.decode(chunk)
-        that.log("---actives(" + Object.keys(sessions).length + ")---" + options.id + "__ " + tok);
+        that.log(Object.keys(sessions).length + "sessions- " + options.id + " : " + tok);
         cb(tok)
         s.response += tok
       }
@@ -157,7 +157,7 @@ export class McConnector extends Base {
     // should i close session ?  session.close()
     s.end = Date.now()
     s.duration = s.end - s.start
-    cb("!!! session terminée n°" + options.id + " : " + s.response, s)
+    this.log("!!! session terminée n°" + options.id + " : " + s.response, s)
 
     this.log(`[TEST] Total text length: ${s.response.length}`);
     this.state =
