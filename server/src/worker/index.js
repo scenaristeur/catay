@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Base } from "../base/index.js";
 import { CataiConnector } from "../cataiConnector/index.js";
 import { YjsConnector } from "../yjsConnector/index.js";
+import { McConnector } from "../mcConnector/index.js";
 import { TodoList } from "../todolist/index.js";
 
 export class Worker extends Base {
@@ -38,6 +39,14 @@ export class Worker extends Base {
         "!!! catai_url NOT SET ! see https://github.com/scenaristeur/catay/blob/main/server/index.js"
       );
     }
+    if (this.options.multi_channel) {
+      this.log("MultiChannelConnector to", this.options.multi_channel);
+      this.mcConnector = new McConnector(this.options);
+    } else {
+      this.log(
+        "!!! multiChannel NOT SET ! see https://github.com/scenaristeur/catay/blob/main/server/index.js"
+      );
+    }
 
     this.healthCheckRunner = setInterval(
       this.healthCheck.bind(this),
@@ -47,8 +56,10 @@ export class Worker extends Base {
 
   healthCheck() {
     if (
-      this.cataiConnector &&
-      this.cataiConnector.state == "ready" &&
+      (this.cataiConnector &&
+        this.cataiConnector.state == "ready" ||
+        this.mcConnector && this.mcConnector.state == "ready"
+      ) &&
       this.yjs &&
       this.yjs.state == "connected"
     ) {
@@ -79,7 +90,9 @@ export class Worker extends Base {
     }
     this.log(
       "health check",
-      "with CATAIConnector state : '",
+      "with McConnector state : '",
+      this.mcConnector && this.mcConnector.state,
+      "' and cataiConnector state : '",
       this.cataiConnector && this.cataiConnector.state,
       "' and YJSConnector state : '",
       this.yjs && this.yjs.state,
@@ -119,7 +132,15 @@ export class Worker extends Base {
         // if (Math.random() < 0.5) {    // si ramdom necessaire
         this.doing.set(id, current);
         this.todos.delete(id);
-        this.process_doing(id);
+        if (this.cataiConnector &&
+          this.cataiConnector.state == "ready") {
+          this.process_doing_catai(id);
+        }
+        if (this.mcConnector &&
+          this.mcConnector.state == "ready") {
+          this.process_doing_mc(id);
+        }
+
         // }else{
         //     prepare()
         // }
@@ -147,7 +168,35 @@ export class Worker extends Base {
     }
   }
 
-  async process_doing(id) {
+
+  async process_doing_mc(id) {
+    let current = this.doing.get(id);
+    let result = ""
+    const response = await this.mcConnector.chat(
+      current,
+      (token) => {
+        process.stdout.write(token);
+        result += token;
+      }
+    );
+
+    this.log(`\nTotal text length: ${result.length}`);
+
+    current.end = Date.now();
+    current.result = result;
+    current.state = "done";
+    current.duration = current.end - current.start;
+    console.log("done", current);
+    this.done.set(current.id, current);
+    this.doing.delete(current.id);
+    this.state = "ok";
+    this.logList("DONE");
+    this.prepare();
+  }
+
+
+
+  async process_doing_catai(id) {
     let current = this.doing.get(id);
     let result = "";
     const response = await this.cataiConnector.catai.prompt(
