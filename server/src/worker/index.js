@@ -123,7 +123,7 @@ export class Worker extends Base {
       this.logList("PREPARE");
       let id = Array.from(this.todos.keys())[0];
       let current = this.todos.get(id);
-      console.log("current", current);
+      this.log("current", current);
       if (current != undefined && current.state === "todo") {
         current.worker = this.id;
         current.state = "doing";
@@ -172,6 +172,7 @@ export class Worker extends Base {
 
   async process_doing_mc(id) {
     let current = this.doing.get(id);
+    this.log("process_doing_mc", id, current, this.mcConnector.state);
     current.response = ""
     const response = await this.mcConnector.chat(
       current,
@@ -185,7 +186,7 @@ export class Worker extends Base {
     this.log(`\nTotal text length: ${current.response.length}`);
 
     current.end = Date.now();
-    current.response = response;
+   // current.response = response;
     current.state = "done";
     current.duration = current.end - current.start;
     console.log("done", current);

@@ -3,7 +3,11 @@ import { WebsocketProvider } from 'y-websocket'
 import { v4 as uuidv4 } from "uuid";
 
 const doc = new Y.Doc()
-const wsProvider = new WebsocketProvider('ws://localhost:1234', 'my-roomname', doc)
+const wsProvider = new WebsocketProvider(
+  'ws://localhost:1234',
+  //"wss://ylm-websocket.glitch.me",
+   'my-roomname',
+    doc)
 
 wsProvider.on('status', event => {
   console.log("Websocket provider", event.status) // logs "connected" or "disconnected"
@@ -22,8 +26,10 @@ export class User {
   constructor({ name = "inconnu" }) {
     this.name = name;
     this.id = uuidv4()
+    this.listening = []
     this.awareness = null
     this.connect()
+
   }
 
   log(){
@@ -74,7 +80,25 @@ export class User {
       // console.log("todo", todos.toJSON());
      // this.prepare();
 this.log()
-      // console.log("doing", doing)
+ console.log("todo", todos.toJSON());
+  console.log("doing", doing.toJSON());
+   console.log("done", done.toJSON());
+
+   if(doing.size > 0){
+     console.log("doing", doing.entries())
+     for (const value of doing.values()) { 
+       console.log("doing", value)
+     }
+   }
+
+      // console.log("doing", doing.keys(), this.listening)
+
+      //  Array.from(doing.toJSON()).forEach(doing_task => {
+      //    console.log("doing", doing_task)
+      //  })
+
+// let task = doing.get([this.listening[0]])
+// console.log("TASK0", task)
       // console.log("done", done)
       // Y.applyUpdate(doc2, update)
     });
@@ -119,12 +143,8 @@ this.log()
     };
     console.log(todo)
     todos.set(id, todo);
-    console.log(
-      "#####todos doing done#####",
-      Array.from(todos.keys()).length,
-      Array.from(doing.keys()).length,
-      Array.from(done.keys()).length
-    );
+    this.listening.push(id)
+
   }
   clean(){
     this.cleanTodos();

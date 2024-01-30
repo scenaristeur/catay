@@ -68,3 +68,48 @@ https://github.com/yjs/y-dat
 
 # monitoring
 - s-tui
+
+# websocketStream
+- https://developer.chrome.com/docs/capabilities/web-apis/websocketstream?hl=fr
+- https://developer.mozilla.org/en-US/docs/Web/API/Streams_API
+- https://github.com/mdn/dom-examples/tree/main/streams
+- https://github.com/AnthumChris/fetch-progress-indicators
+
+# financial data
+- https://intrinio.com/ ws websocket
+
+# server
+- https://glitch.com/edit/#!/ylm-websocket?path=README.md
+
+# y-websocket
+- y-websocket ne fonctionne pas sur glitch.me avec node
+
+# y-webrtc
+- https://github.com/yjs/y-webrtc
+- ou serverless https://medium.com/collaborne-engineering/serverless-yjs-72d0a84326a2
+
+bug 
+
+ajouter import WebSocket from "ws"; dans lib0/websocket.js car sinon 
+
+
+```
+smag@smag-IdeaPad:~/dev/catay/server$ node wrtc-yllm.js 
+file:///home/smag/dev/catay/server/node_modules/lib0/websocket.js:25
+    const websocket = new WebSocket(wsclient.url)
+                      ^
+
+ReferenceError: WebSocket is not defined
+    at setupWS (file:///home/smag/dev/catay/server/node_modules/lib0/websocket.js:25:23)
+    at new WebsocketClient (file:///home/smag/dev/catay/server/node_modules/lib0/websocket.js:123:5)
+    at new SignalingConn (file:///home/smag/dev/catay/server/node_modules/y-webrtc/src/y-webrtc.js:478:5)
+    at file:///home/smag/dev/catay/server/node_modules/y-webrtc/src/y-webrtc.js:663:75
+    at Module.setIfUndefined (file:///home/smag/dev/catay/server/node_modules/lib0/map.js:50:24)
+    at file:///home/smag/dev/catay/server/node_modules/y-webrtc/src/y-webrtc.js:663:33
+    at Array.forEach (<anonymous>)
+    at WebrtcProvider.connect (file:///home/smag/dev/catay/server/node_modules/y-webrtc/src/y-webrtc.js:662:24)
+    at new WebrtcProvider (file:///home/smag/dev/catay/server/node_modules/y-webrtc/src/y-webrtc.js:639:10)
+    at file:///home/smag/dev/catay/server/wrtc-yllm.js:6:18
+
+
+```
