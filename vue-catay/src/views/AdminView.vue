@@ -4,6 +4,7 @@
 
 // BE CAREFULL //
 <button v-on:click="clean()">Clean</button>
+<button v-on:click="add_ten()">Add 10</button>
     </div>
 </template>
 
@@ -13,6 +14,11 @@
         methods: {
 clean() {
     this.user.clean()
+},
+add_ten() {
+    for (let i = 0; i < 10; i++) {
+        this.user.addTodo({prompt:"Qu'est-ce que tu racontes "+i, temperature: 0})
+    }
 }
         },
         computed: {

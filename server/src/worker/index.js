@@ -4,6 +4,10 @@ import { CataiConnector } from "../cataiConnector/index.js";
 import { YjsConnector } from "../yjsConnector/index.js";
 import { TodoList } from "../todolist/index.js";
 
+import { RemoteCatAI } from "catai";
+
+let table = {};
+
 export class Worker extends Base {
   constructor(options = {}) {
     super(options);
@@ -14,6 +18,7 @@ export class Worker extends Base {
     this.chalk = this.options.color || this.chalk.blue;
     //this.name = options.name || "inconnu";
     this.numberOfKOMax = 12;
+    this.sessions = {};
     // this.catai_url = options.catai_url || "ws://localhost:3000";
     // this.yjs_url = options.yjs_url || "ws://localhost:1234";
     // this.yjs_room = options.yjs_room || "my-roomname";
@@ -88,14 +93,19 @@ export class Worker extends Base {
   }
 
   processList() {
+    let worker = this;
     this.prepare();
     this.yjs.doc.on("update", (update) => {
-      //console.log(update)
+      console.log("update", this.options.name);
       // let date = workspace.get("date");
       // console.log("date", date);
       //console.log("array", yarray.toArray() )
-      // console.log("todo", todos.toJSON());
-      this.prepare();
+      try {
+        console.log("todos", worker.todos.toJSON());
+        worker.prepare();
+      } catch (e) {
+        console.log("ERROR", e);
+      }
 
       // console.log("doing", doing)
       // console.log("done", done)
@@ -104,12 +114,21 @@ export class Worker extends Base {
   }
 
   prepare() {
-    this.checkObsoletes();
-    if (this.state == "ok") {
-      this.logList("PREPARE");
-      let id = Array.from(this.todos.keys())[0];
+    this.logList("PREPARE", this.state);
+    // ERROR ? this.checkObsoletes();
+    if (this.state == "ok" && Array.from(this.todos.keys()).length > 0) {
+      // let id = Array.from(this.todos.keys())[0];
+      // let current = this.todos.get(id);
+      let id = this.getOlder();
       let current = this.todos.get(id);
       console.log("current", current);
+
+      let session = this.sessions[current.asker];
+      if (!session) {
+        session = this.cataiConnector.createSession(current.asker);
+        this.sessions[current.asker] = session;
+      }
+      console.log("session", session);
       if (current != undefined && current.state === "todo") {
         current.worker = this.id;
         current.state = "doing";
@@ -120,12 +139,21 @@ export class Worker extends Base {
         this.doing.set(id, current);
         this.todos.delete(id);
         this.process_doing(id);
-        // }else{
-        //     prepare()
-        // }
+      } else {
+        this.log("!!! current.state should be 'todo'", current.state);
       }
       this.logList("PREPARED todo");
+    } else {
+      this.log("NO PREPARE", this.state, Array.from(this.todos.keys()).length);
     }
+  }
+
+  getOlder() {
+    let todos = Array.from(this.todos.values()).sort((a, b) => {
+      return a.date - b.date;
+    });
+    console.log(todos);
+    return todos[0].id;
   }
 
   checkObsoletes() {
@@ -138,9 +166,9 @@ export class Worker extends Base {
       //si plus de 6 minutes
       if (duration > 360000) {
         // TODO : ADD or asker not in awareness anymore
-        (item.state = "reverting to todos because obsolete "), duration;
+        item.state = "reverting to todos because obsolete " + duration;
         this.doing.delete(item.id);
-        item.id = "todo";
+        item.state = "todo";
         this.todos.set(item.id, item);
         this.log("revert doing", item.id, duration);
       }
@@ -148,28 +176,51 @@ export class Worker extends Base {
   }
 
   async process_doing(id) {
+    console.log("process doing", id);
     let current = this.doing.get(id);
+
+    console.log("current", current);
+
     let result = "";
-    const response = await this.cataiConnector.catai.prompt(
-      current.prompt,
-      (token) => {
-        process.stdout.write(token);
-        result += token;
-      }
-    );
+    try {
+      const catai = new RemoteCatAI("ws://localhost:3000");
 
-    this.log(`\nTotal text length: ${response.length}`);
+      const response = await catai.prompt(
+        current.prompt,
+        (token) => {
+          process.stdout.write(token);
 
-    current.end = Date.now();
-    current.result = result;
-    current.state = "done";
-    current.duration = current.end - current.start;
-    console.log("done", current);
-    this.done.set(current.id, current);
-    this.doing.delete(current.id);
-    this.state = "ok";
-    this.logList("DONE");
-    this.prepare();
+          result += token;
+        }
+      );
+
+      console.log(`Total text length: ${response.length}`);
+      catai.close();
+      // let session = this.sessions[current.asker]
+      // const response = await session.prompt(
+      //   current.prompt,
+      //   (token) => {
+      //     process.stdout.write(token);
+      //     result += token;
+      //   }
+      // );
+
+      // this.log(`\nTotal text length: ${response.length}`);
+
+      current.end = Date.now();
+      current.result = result;
+      current.state = "done";
+      current.duration = current.end - current.start;
+      console.log("done", current);
+      this.done.set(current.id, current);
+      this.doing.delete(current.id);
+      this.state = "ok";
+      this.logList("DONE");
+    } catch (e) {
+      console.log("ERROR PROMPTING", e);
+    } finally {
+      this.prepare();
+    }
   }
 
   logList(step) {
@@ -186,5 +237,10 @@ export class Worker extends Base {
       Array.from(doing.keys()).length,
       Array.from(done.keys()).length
     );
+    table.yjs = this.yjs && this.yjs.state;
+    table.catai = this.cataiConnector && this.cataiConnector.state;
+    table.state = this.state;
+
+    console.table(table);
   }
 }

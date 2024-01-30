@@ -10,6 +10,7 @@ console.log(argv);
 let worker = new Worker({
   name: argv.name || "Bob",
   job: "écrivain",
+  maxConcurrentSessions: argv.mcs || argv.maxConcurrentSessions || 2,
   systemPrompt:
     "you are a pirate and you end all your sentences with 'Héhéhé, moussaillon!'",
  catai_url: argv.catai_url || "ws://localhost:3000",

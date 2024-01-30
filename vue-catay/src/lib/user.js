@@ -32,7 +32,7 @@ export class User {
     let user = this
     console.log("connect")
     this.awareness = wsProvider.awareness;
-    this.awareness.clientId = this.id;
+   // this.awareness.clientId = this.id;
     this.awareness.on("change", (changes) => {
       // Whenever somebody updates their awareness information,
       // we log all awareness information from all users.

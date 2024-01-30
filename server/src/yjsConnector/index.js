@@ -22,7 +22,7 @@ export class YjsConnector extends Base {
       { WebSocketPolyfill: WebSocket }
     );
     this.awareness = this.wsProvider.awareness;
-    this.awareness.clientId = this.id;
+    //this.awareness.clientId = this.id;
     this.wsProvider.on("status", (event) => {
       this.state = event.status;
       this.log(this.state); // logs "connected" or "disconnected"
@@ -31,6 +31,8 @@ export class YjsConnector extends Base {
     this.awareness.on("change", (changes) => {
       // Whenever somebody updates their awareness information,
       // we log all awareness information from all users.
+      console.log(changes)
+      console.log(Array.from(this.awareness.getStates()))
       let agents = Array.from(this.awareness.getStates().values());
       console.log("######AWARENESS", agents.length);
       agents.forEach((a) => {

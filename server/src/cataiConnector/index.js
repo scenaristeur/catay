@@ -31,6 +31,26 @@ export class CataiConnector extends Base {
       // relance de la connexion après un délai ?
     });
   }
+  createSession(asker) {
+    let session = new RemoteCatAI(this.options.catai_url);
+    session.asker = asker
+    session.on("open", async () => {
+      this.log(asker +"Connected to ", this.options.catai_url);
+      session.state = "opened"
+    });
+
+    session.on("close", async () => {
+      this.log(asker+"CATAI close");
+      session.state = "closed"
+    });
+
+    session.on("error", async (err) => {
+      this.log(asker+"CATAI error", err);
+      session.state = "error"
+    });
+    return session
+
+  }
   async test() {
     this.log("test if catai is ok");
 
