@@ -13,13 +13,13 @@ export class YjsConnector extends Base {
   }
   _init() {
     this.log("connecting to ", this.options.yjs_url, this.options.yjs_room);
-
+    var params = { headers: { "User-Agent": "WebSocket Client" } };
     this.doc = new Y.Doc();
     this.wsProvider = new W.WebsocketProvider(
       this.options.yjs_url,
       this.options.yjs_room,
       this.doc,
-      { WebSocketPolyfill: WebSocket }
+      { WebSocketPolyfill: WebSocket/*, params */}
     );
     this.awareness = this.wsProvider.awareness;
     this.awareness.clientId = this.id;
@@ -40,8 +40,8 @@ export class YjsConnector extends Base {
             a.agent.state,
             a.agent.name,
             a.agent.id,
-            a.agent.style,
-           // a
+            a.agent.style
+            // a
           );
         } catch (e) {
           console.log(e, a);

@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 
 const doc = new Y.Doc()
 const wsProvider = new WebsocketProvider(
-  'ws://localhost:1234',
-  //"wss://ylm-websocket.glitch.me",
+  //'ws://localhost:9999',
+  //'ws://localhost:1234',
+  "wss://ylm-websocket.glitch.me",
    'my-roomname',
     doc)
 

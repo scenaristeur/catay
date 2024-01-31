@@ -1,3 +1,10 @@
+# deploying y-websocket on glitch.me
+
+throw a 502 error as it needs that the nodejs client adds user-agent headers 
+lust change y-websocket/src/y-websocket.js according to https://github.com/yjs/y-websocket/pull/173/commits/69ddb2c49ac73e76b1ab8b2876d24fe94a153819
+
+
+
 cd catay/server/
 
 nodemon .  --name "Bob le Scribe" --temperature 3 --age 45 --prompt "raconte-moi une blague"
