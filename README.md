@@ -1,8 +1,12 @@
 # deploying y-websocket on glitch.me
 
+- [YJS] connecting loop
 throw a 502 error as it needs that the nodejs client adds user-agent headers 
 lust change y-websocket/src/y-websocket.js according to https://github.com/yjs/y-websocket/pull/173/commits/69ddb2c49ac73e76b1ab8b2876d24fe94a153819
 
+
+# models
+models like vicuna-7b-v1.5-16k.Q2_K.gguf should be in server/src/mcConnector/models/
 
 
 cd catay/server/
