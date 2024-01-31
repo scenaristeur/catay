@@ -14,10 +14,11 @@ let worker = new Worker({
     "you are a pirate and you end all your sentences with 'Héhéhé, moussaillon!'",
   //catai_url: argv.catai_url || "ws://localhost:3000",
   multi_channel: true,
-  yjs_url: "ws://localhost:1234", // 'wss://ylm-websocket.glitch.me/',  //argv.yjs_url || "ws://localhost:1234", "ws://localhost:9999", //
+  yjs_url: 'wss://ylm-websocket.glitch.me/',  //argv.yjs_url || "ws://localhost:1234", "ws://localhost:9999", //
   yjs_room: argv.yjs_room || "my-roomname",
   debug: argv.debug || true, // change to false by default
   healthCheckInterval: argv.healthCheckInterval || 5000,
+  runMcTest : false // if should run mc test to test if the model is ok
 
   // color: argv.color || "blue"
 });

@@ -56,10 +56,8 @@ export class Worker extends Base {
 
   healthCheck() {
     if (
-      (this.cataiConnector &&
-        this.cataiConnector.state == "ready" ||
-        this.mcConnector && this.mcConnector.state == "ready"
-      ) &&
+      ((this.cataiConnector && this.cataiConnector.state == "ready") ||
+        (this.mcConnector && this.mcConnector.state == "ready")) &&
       this.yjs &&
       this.yjs.state == "connected"
     ) {
@@ -101,44 +99,49 @@ export class Worker extends Base {
   }
 
   processList() {
-    this.prepare();
-    this.yjs.doc.on("update", (update) => {
-      //console.log(update)
-      // let date = workspace.get("date");
-      // console.log("date", date);
-      //console.log("array", yarray.toArray() )
-      // console.log("todo", todos.toJSON());
+    // this.prepare();
+    // this.yjs.doc.on("update", (update) => {
+    //   this.prepare();
+    // });
+    this.todos.observeDeep((events, transaction) => {
+      console.log("events", events, transaction)
       this.prepare();
-
-      // console.log("doing", doing)
-      // console.log("done", done)
-      // Y.applyUpdate(doc2, update)
-    });
+    
+    })
   }
 
   prepare() {
     this.checkObsoletes();
     if (this.state == "ok") {
-      this.logList("PREPARE");
+      let delay = Math.random() * 1000; // wait less tha 1 second to avoid that many workers get the job at the same time
+
+      setTimeout(() => {
+        this.log("PREPARE " + delay + "ms");
+      }, Math.floor(delay));
+
       let id = Array.from(this.todos.keys())[0];
       let current = this.todos.get(id);
       console.log("current", current);
-      if (current != undefined && current.state === "todo") {
+      if (
+        current != undefined &&
+        current.state === "todo" &&
+        current.worker === undefined
+      ) {
         current.worker = this.id;
         current.state = "doing";
         this.state = "working";
-
+        current.attemps = 1;
         current.start = Date.now();
         // if (Math.random() < 0.5) {    // si ramdom necessaire
-        this.doing.set(id, current);
-        this.todos.delete(id);
-        if (this.cataiConnector &&
-          this.cataiConnector.state == "ready") {
-          this.process_doing_catai(id);
-        }
-        if (this.mcConnector &&
-          this.mcConnector.state == "ready") {
-          this.process_doing_mc(id);
+        if (!this.doing.has(id)) {
+          this.doing.set(id, current);
+          this.todos.delete(id);
+          if (this.cataiConnector && this.cataiConnector.state == "ready") {
+            this.process_doing_catai(id);
+          }
+          if (this.mcConnector && this.mcConnector.state == "ready") {
+            this.process_doing_mc(id);
+          }
         }
 
         // }else{
@@ -159,7 +162,10 @@ export class Worker extends Base {
       //si plus de 6 minutes
       if (duration > 360000) {
         // TODO : ADD or asker not in awareness anymore
-        item.state = "todo"
+        item.state = "todo";
+        delete item.worker;
+        delete item.start;
+        item.attemps = item.attemps + 1;
         this.doing.delete(item.id);
         //item.id = "todo";
         this.todos.set(item.id, item);
@@ -168,19 +174,15 @@ export class Worker extends Base {
     }
   }
 
-
   async process_doing_mc(id) {
     let current = this.doing.get(id);
     this.log("process_doing_mc", id, current, this.mcConnector.state);
-    current.response = ""
-    const response = await this.mcConnector.chat(
-      current,
-      (token) => {
-        process.stdout.write(token);
-        current.response += token;
-        this.doing.set(current.id, current);
-      }
-    );
+    current.response = "";
+    const response = await this.mcConnector.chat(current, (token) => {
+      process.stdout.write(token);
+      current.response += token;
+      this.doing.set(current.id, current);
+    });
 
     this.log(`\nTotal text length: ${current.response.length}`);
 
@@ -195,8 +197,6 @@ export class Worker extends Base {
     this.logList("DONE");
     this.prepare();
   }
-
-
 
   async process_doing_catai(id) {
     let current = this.doing.get(id);

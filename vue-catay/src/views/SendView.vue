@@ -16,7 +16,9 @@ export default {
     methods: {
         send() {
             console.log(this.prompt)
-            this.user.addTodo({prompt:this.prompt.trim(), temperature: 0})
+
+            let randomSeed = Math.floor(Math.random() * 100) + 1
+            this.user.addTodo({prompt:this.prompt.trim(), temperature: 0, seed:randomSeed})
             this.prompt = ""
         }
     },

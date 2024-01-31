@@ -8,8 +8,8 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-//const modelName = "vicuna-7b-16k-q4_k_s.gguf"
-const modelName = "vicuna-7b-v1.5-16k.Q2_K.gguf"
+const modelName = "vicuna-7b-16k-q4_k_s.gguf"
+// const modelName = "vicuna-7b-v1.5-16k.Q2_K.gguf"
 
 const model = new LlamaModel({
   modelPath: path.join(__dirname, "models", modelName)
@@ -28,7 +28,12 @@ export class McConnector extends Base {
     this._init();
   }
   async _init() {
-    await this.test()
+    if (this.options.runMcTest==true) {
+      await this.test();
+    }else{
+      this.state = "ready"
+    }
+   
     // this.catai = new RemoteCatAI(this.options.catai_url);
     // this.catai.on("open", async () => {
     //   this.log("Connected to ", this.options.catai_url);
@@ -116,9 +121,11 @@ export class McConnector extends Base {
 
   chat = async (options, cb) => {
     const that = this
-    this.log("### " + options.user + " say " + options.prompt)
+
+    let seed = options.seed != 0 ? options.seed : Math.floor(Math.random() * 100) + 1
+    this.log("### " + options.user + " say " + options.prompt, "seed:", seed)
     this.log("### starting session n°" + options.id)
-    const context = new LlamaContext({ model });
+    const context = new LlamaContext({ model, seed });
 
     let sessionOptions = {
       context: context,
@@ -171,7 +178,7 @@ export class McConnector extends Base {
 
     delete sessions[options.id]
     this.log("estimation time : ",this.estimationTime)
-    console.log("!!! sessions actives ", sessions)
+    console.log("!!! sessions actives ", sessions.toString())
 
   }
 

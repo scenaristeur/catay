@@ -1,0 +1,18 @@
+<textarea id="prompt" style="width: 100%; height: 100px"></textarea>
+<button id="send" style="width: 100%; height: 100px">Send</button>
+<div id="result" style="width: 100%; height: 100px"></div>
+
+<script type="module">
+    import { User } from './user.js';
+    let user = new User({ name: "Bob le worker" })
+    user.log()
+    const updateUi = () => {
+        document.getElementById("result").innerHTML = user.result
+    }
+    updateUi()
+</script>
+<script>
+    document.getElementById("send").addEventListener("click", function () {
+        user.addTodo({ prompt: document.getElementById("prompt").value })
+    })
+</script>

@@ -1,3 +1,47 @@
+# adding a todo from the front or another process
+
+/vue-catay/src/lib/user.js :line 122 called by vue-catay/src/views/SendView.vue
+```
+  addTodo(options) {
+    let id = uuidv4()
+    let todo = {
+      id: id,
+      asker: this.id,
+      type: 'text',
+      prompt: options.prompt || 'prompt',
+      state: 'todo',
+      seed: options.seed || 0,
+      temperature: options.temperature || 0,
+      date: Date.now()
+    }
+    console.log(todo)
+    todos.set(id, todo)
+    this.listening.push(id)
+  }
+  ```
+
+# starting a worker
+
+/server/index.js
+```
+let worker = new Worker({
+  name: argv.name || "Bob",
+  job: "écrivain",
+  systemPrompt:
+    "you are a pirate and you end all your sentences with 'Héhéhé, moussaillon!'",
+  //catai_url: argv.catai_url || "ws://localhost:3000",
+  multi_channel: true,
+  yjs_url: 'wss://ylm-websocket.glitch.me/',  //argv.yjs_url || "ws://localhost:1234", "ws://localhost:9999", //
+  yjs_room: argv.yjs_room || "my-roomname",
+  debug: argv.debug || true, // change to false by default
+  healthCheckInterval: argv.healthCheckInterval || 5000,
+  runMcTest : false // if should run mc test to test if the model is ok
+
+  // color: argv.color || "blue"
+});
+```
+
+
 # deploying y-websocket on glitch.me
 
 - [YJS] connecting loop
@@ -7,6 +51,7 @@ lust change y-websocket/src/y-websocket.js according to https://github.com/yjs/y
 
 # models
 models like vicuna-7b-v1.5-16k.Q2_K.gguf should be in server/src/mcConnector/models/
+using node-llama-cpp https://withcatai.github.io/node-llama-cpp/api/type-aliases/LlamaContextOptions#seed
 
 
 cd catay/server/
@@ -79,3 +124,5 @@ https://github.com/yjs/y-dat
 
 # monitoring
 - s-tui
+
+

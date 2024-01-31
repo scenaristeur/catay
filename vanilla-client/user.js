@@ -1,6 +1,13 @@
-import * as Y from 'yjs'
-import { WebsocketProvider } from 'y-websocket'
-import { v4 as uuidv4 } from 'uuid'
+import * as Y from './node_modules/yjs/src/index.js'
+// I can not impor y-websocket
+import { WebsocketProvider } from './node_modules/y-websocket/dist/y-websocket.d.ts'
+import { v4 as uuidv4 } from './node_modules/uuid/dist/index.js'
+
+// Define "require"
+import { createRequire } from "node:module";
+// const require = createRequire(import.meta.url);
+
+// const W = require('./node_modules/y-websocket/dist/y-websocket.cjs')
 
 const doc = new Y.Doc()
 const wsProvider = new WebsocketProvider(
