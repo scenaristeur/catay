@@ -1,10 +1,10 @@
-import * as Y from './node_modules/yjs/src/index.js'
+import * as Y from 'https://cdn.jsdelivr.net/npm/yjs/src/index.js'
 // I can not impor y-websocket
-import { WebsocketProvider } from './node_modules/y-websocket/dist/y-websocket.d.ts'
+import { WebsocketProvider } from 'https://cdn.jsdelivr.net/npm/y-websocket/src/y-websocket.js'
 import { v4 as uuidv4 } from './node_modules/uuid/dist/index.js'
 
 // Define "require"
-import { createRequire } from "node:module";
+//import { createRequire } from "node:module";
 // const require = createRequire(import.meta.url);
 
 // const W = require('./node_modules/y-websocket/dist/y-websocket.cjs')
