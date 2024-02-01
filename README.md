@@ -1,3 +1,7 @@
+# check your .env
+copy .env-example to .env and adapt it to your need
+
+
 # adding a todo from the front or another process
 
 /vue-catay/src/lib/user.js :line 122 called by vue-catay/src/views/SendView.vue
