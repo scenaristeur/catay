@@ -1,5 +1,23 @@
 # check your .env
-copy .env-example to .env and adapt it to your need
+- copy .env-example to .env and adapt it to your need
+
+- manually download a GGUF model from https://huggingface.co/TheBloke?search_models=gguf according to node-llama-cpp
+
+and store it in server/mcConnector/models/ and update MODEL_NAME_ENV in .env
+
+
+
+or you can try  
+
+```
+npx ipull https://huggingface.co/TheBloke/vicuna-7B-v1.5-16K-GGUF/resolve/main/vicuna-7b-v1.5-16k.Q2_K.gguf -s server/mcConnector/models/
+```
+
+# run 
+
+if error code: 'EADDRINUSE',
+ps -ef | grep npx and kill
+
 
 
 # adding a todo from the front or another process

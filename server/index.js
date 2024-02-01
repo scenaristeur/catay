@@ -18,8 +18,8 @@ let worker = new Worker({
   yjs_room: argv.yjs_room || "my-roomname",
   debug: argv.debug || true, // change to false by default
   healthCheckInterval: argv.healthCheckInterval || 5000,
-  runMcTest : false // if should run mc test to test if the model is ok
-
+  runMcTest : false, // if should run mc test to test if the model is ok
+modelName: argv.modelName || "vicuna-7b-v1.5-16k.Q2_K.gguf"
   // color: argv.color || "blue"
 });
 

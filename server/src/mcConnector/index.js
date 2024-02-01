@@ -8,12 +8,7 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const modelName = "vicuna-7b-16k-q4_k_s.gguf"
-// const modelName = "vicuna-7b-v1.5-16k.Q2_K.gguf"
-
-const model = new LlamaModel({
-  modelPath: path.join(__dirname, "models", modelName)
-});
+const model = undefined
 
 let prompts = []
 let sessions = {}
@@ -22,6 +17,12 @@ let sessions = {}
 export class McConnector extends Base {
   constructor(options = {}) {
     super(options);
+    const modelName = options.modelName || "vicuna-7b-16k-q4_k_s.gguf"
+// const modelName = "vicuna-7b-v1.5-16k.Q2_K.gguf"
+
+model = new LlamaModel({
+  modelPath: path.join(__dirname, "models", modelName)
+});
     this.flag = "[MULTI-CHANNEL]";
     this.chalk = this.chalk.rgb(145, 167, 45); //.hex('#DEADED')
 
