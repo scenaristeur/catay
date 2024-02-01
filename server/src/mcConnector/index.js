@@ -8,7 +8,7 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const model = undefined
+let model = undefined
 
 let prompts = []
 let sessions = {}
