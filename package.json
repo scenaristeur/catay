@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.1"
+  },
+  "name": "catay",
+  "description": "- copy .env-example to .env and adapt it to your need",
+  "version": "1.0.0",
+  "main": "run.js",
+  "type": "module",
+  "directories": {
+    "doc": "doc"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "node run_local_y-websocket.js && cd vue-catay && npm run dev",
+    "remote": "node run_remote_y-websocket.js && cd vue-catay && npm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

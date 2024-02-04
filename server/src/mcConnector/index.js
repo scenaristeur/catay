@@ -17,11 +17,13 @@ let sessions = {}
 export class McConnector extends Base {
   constructor(options = {}) {
     super(options);
-    const modelName = options.modelName || "vicuna-7b-16k-q4_k_s.gguf"
-// const modelName = "vicuna-7b-v1.5-16k.Q2_K.gguf"
+    this.modelName = options.modelName || "vicuna-7b-v1.5-16k.Q2_K.gguf"
+
+const modelPath = path.join(__dirname, "models", this.modelName)
+console.log("Loading LLM model from", modelPath)
 
 model = new LlamaModel({
-  modelPath: path.join(__dirname, "models", modelName)
+  modelPath: modelPath
 });
     this.flag = "[MULTI-CHANNEL]";
     this.chalk = this.chalk.rgb(145, 167, 45); //.hex('#DEADED')
@@ -140,7 +142,7 @@ model = new LlamaModel({
     let s = {
       options: options,
       //context: context,
-      modelName: modelName,
+      modelName: that.modelName,
       session: session,
       start: Date.now(),
       response: ""
